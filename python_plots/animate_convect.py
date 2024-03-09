@@ -23,21 +23,25 @@ def read_vector_file(filename):
     return x, y, np.array(t)
 
 # Test the function
-filename = "data/comp_sol.txt" 
+try:
+    filename = "../data/comp_sol_phys.txt" 
+    x_true, y_true, time_true = read_vector_file("../data/analytical_solution_phys.txt")
+except FileNotFoundError:
+    filename = "../data/comp_sol.txt"
+    x_true, y_true, time_true = read_vector_file("../data/analytical_solution.txt")
 x, y, time = read_vector_file(filename)
-x_true, y_true, time_true = read_vector_file("data/analytical_solution.txt")
 print(np.shape(x), np.shape(y), np.shape(time))
 print(np.shape(x_true), np.shape(y_true), np.shape(time_true))
 
 # Initialize the plot
 fig, ax = plt.subplots()
-line1, = ax.plot([], [], lw=2, marker='o', color='seagreen', label=r'$u^h(x)$')  # First line
+line1, = ax.plot([], [], lw=2, marker='o', markersize=4, color='seagreen', label=r'$u^h(x)$')  # First line
 line2, = ax.plot([], [], lw=2, color='gray', linestyle="-.", label='Analytical Solution')  # Second line
 
 # Function to initialize the plot
 def init():
     ax.set_xlim(-0.5, 0.5)  # Extend x-axis limit slightly to accommodate markers
-    ax.set_ylim(0, 1.5)
+    ax.set_ylim(-2, 2)
     ax.set_xlabel(r'$\frac{x}{L}$')
     ax.set_ylabel(r'$\frac{u}{U}$')
     ax.set_title(r'Convection over $\frac{ct}{L} \in [0, 1]$')
@@ -53,5 +57,5 @@ def animate(i):
 
 # Initialize the animation
 ani = animation.FuncAnimation(fig, animate, frames=len(y), init_func=init, interval=50, blit=True)
-
+#ani.save('convect.gif', writer='imagemagick', fps=10)
 plt.show()

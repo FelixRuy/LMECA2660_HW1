@@ -16,7 +16,7 @@ void print_vector(double * v, int N){
     printf("%f]\n", v[N-1]);
 }
 
-void write_vector_file(double * v, int N, double time, char * filename){
+void write_vector_file(double * v, int N, double scale, double time, char * filename){
     FILE * file = fopen
     (filename, "a");
     fprintf(file, "Time = %f : ", time);
