@@ -1,14 +1,14 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-CLF = 0.5 # CLF condition ?? 
+CLF = 1.7 # CLF condition ?? 
 # Eigenvalues (lamda * h/c * CLF) for partially decentered scheme (ED) 
-l_ED = lambda kh : -1/6 * (np.exp(-2j*kh)-6*np.exp(-1j*kh)+3+2*np.exp(1j*kh)) * CLF 
+l_ED = lambda kh : -1/6 * (np.exp(-2j*kh) -6*np.exp(-1j*kh)+3+2*np.exp(1j*kh)) * CLF 
 kh = np.linspace(0, 2*np.pi, 5)
 kh_cont = np.linspace(0, 2*np.pi, 100)
 lamb = l_ED(kh_cont)
 # Eigenvalues (lamda * h/c * CLF) for centered E2 scheme
-l_E2 = lambda kh : (np.exp(1j*kh)-np.exp(-1j*kh)) * CLF
+l_E2 = lambda kh : 1/2 * (np.exp(1j*kh)-np.exp(-1j*kh)) * CLF
 lamb_E2 = l_E2(kh)
 # Eigenvalues (lamda * h/c * CLF) for centered E4 scheme
 l_E4 = lambda kh : -1 * (2/3*(np.exp(1j*kh)-np.exp(-1j*kh)) - 1/12*(np.exp(2j*kh)-np.exp(-2j*kh))) * CLF

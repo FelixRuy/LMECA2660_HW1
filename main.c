@@ -4,6 +4,7 @@
 #include "math.h"
 #include "vector.h"
 #include "PDE.h"
+#include <time.h>
 
 #define GRN   "\x1B[32m"
 #define YEL   "\x1B[33m"
@@ -11,6 +12,18 @@
 #define MAG   "\x1B[35m"
 #define CYN   "\x1B[36m"
 #define RESET "\x1B[0m" 
+
+void write_param_file(double CFL, double resol_param, char * method, int MODE, int INIT_COND, double exec_time, char * filename){
+    FILE * file = fopen
+    (filename, "w");
+    fprintf(file, "CFL = %f\n", CFL);
+    fprintf(file, "resol = %f\n", resol_param);
+    fprintf(file, "method = %s\n", method);
+    fprintf(file, "MODE = %d\n", MODE);
+    fprintf(file, "INIT_COND = %d\n", INIT_COND);
+    fprintf(file, "exec_time = %.16f\n", exec_time);
+    fclose(file);
+}
 
 
 double true_u(double x, double t, double sigma, double c, double U, double L, double INIT_COND) {
@@ -67,6 +80,9 @@ int main(int argc, char ** argv){
             "---------------------------- \n\n");
 		return -1;
     } 
+
+    double start = clock();
+
     //_____________________Uniform grid size_____________________
     int res; // To ensure that there is no error
     //_____________________Parameters____________________________
@@ -77,7 +93,7 @@ int main(int argc, char ** argv){
     int MODE = atoi(argv[4]); // uniform (0) or non-uniform (1) grid
     int INIT_COND = atoi(argv[5]); // (0) for gaussian, (1) for wave_packet
     double CFL = atof(argv[1]); // CFL number for stability
-    double resol_param = atof(argv[2]); // Resolution parameter
+    double resol_param = atof(argv[2]); // Resolution parameter - sigma/h
     double dom_s = 16.; // L/sigma for the periodic domain
     double L = 1.; // Length of the domain
     double U = 1.; // Constant for the gaussian 
@@ -92,7 +108,6 @@ int main(int argc, char ** argv){
     printf(BLU "Initial condition Selected :\n–––––––––––––––––––––––\n%s\n\n" RESET, INIT_COND ? "Wave packet" : "Gaussian");
     printf(BLU "Parameters :\n–––––––––––––––––––––––\nCFL = %f\ndom_s = %f\nresol = %f\nL = %f\nU = %f\nc = %f\nsigma = %f\nh = %f\nN = %d\ndt = %f\na = %f \n\n" RESET, CFL, dom_s, resol_param, L, U, c, sigma, h, N, dt, a);
     printf(BLU "Method Selected :\n–––––––––––––––––––––––\n%s\n\n" RESET, method);
-
 
     if(MODE==0){
         //_____________________Initial condition______________________
@@ -137,6 +152,10 @@ int main(int argc, char ** argv){
         free(xi);
         for(int i = 0; i<4; i++) free(k[i]);
         free(u_sol);
+
+        double end = clock();
+        double exec_time = (end - start) / CLOCKS_PER_SEC;
+        write_param_file(CFL, resol_param, method, MODE, INIT_COND, exec_time, "data/params.txt");
         return 0;
     }
 
@@ -201,6 +220,11 @@ int main(int argc, char ** argv){
         free(v);
         for(int i = 0; i<4; i++) free(k[i]);
         free(v_sol);
+
+        double end = clock();
+        double exec_time = (end - start) / CLOCKS_PER_SEC;
+        write_param_file(CFL, resol_param, method, MODE, INIT_COND, exec_time, "data/params.txt");
+
         return 0;
     }
     return -1;

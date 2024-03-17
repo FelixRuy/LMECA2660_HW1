@@ -1,14 +1,14 @@
 CC=gcc
 CFLAGS=-O2 -Wall -g
 
-MODE=1	
-INIITIAL_CONDITION=0
+MODE=1
+INIITIAL_CONDITION=1
 CFL=0.5
 RESOL=8
-METHOD=E4
+METHOD=ED
 FILE_SOL=data/comp_sol.txt
 FILE_SOL_PHYS=data/comp_sol_phys.txt
-FILE_DIAG=data/diag.txt
+FILE_DIAG=error_plots/diag_8_E2.txt
 
 exec : main.c vector.c PDE.c
 	rm -f $(FILE_SOL)
